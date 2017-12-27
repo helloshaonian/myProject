@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myProject.common.dao.ModuleMapper">
+	
+	
+	<sql id="mapSQL" >
+						  mid as "mid" 
+						 ,   mname as "mname" 
+				  	</sql>
+  	
+	<sql id="objectSQL" >
+						  mid as "mid" 
+						 ,   mname as "mname" 
+				  	</sql>
+	
+	<select id="selectByPrimaryKey" resultType="com.myProject.common.model.Module" parameterType="java.lang.Long" >
+    	SELECT 
+    	<include refid="mapSQL" />
+    	FROM mp_module
+   		 WHERE 
+								 mid=#{mid} 
+										  </select>
+  
+   <select id="selectModelByExample" resultType="com.myProject.common.model.Module" parameterType="com.myProject.common.model.Module" >
+    SELECT 
+    <include refid="objectSQL" />
+    FROM mp_module
+    <where>
+    	 <if test="mid!=null">AND  mid = #{mid}</if>
+		<if test="mname!=null">AND  mname = #{mname}</if>
+		    </where>
+  </select>
+  
+  <select id="selectByExample" resultType="java.util.HashMap" parameterType="com.myProject.common.model.Module" >
+    SELECT 
+    <include refid="mapSQL" />
+    FROM mp_module
+    <where>
+    	 <if test="mid!=null">AND  mid = #{mid}</if>
+		<if test="mname!=null">AND  mname = #{mname}</if>
+		    </where>
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    DELETE FROM mp_module
+    WHERE 						 mid=#{mid} 
+										  </delete>
+  
+  <!--mysql主键自增-->	
+  <insert id="insert" parameterType="com.myProject.common.model.Module" useGeneratedKeys="true" keyProperty="mid">
+    INSERT INTO mp_module
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    	    	    			    	    	    	<if test="mname != null" >mname,</if>
+    			    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    	    	    			    	    	    	<if test="mname != null" >#{mname},</if>
+				    </trim>
+  </insert>
+  
+   <update id="update" parameterType="com.myProject.common.model.Module" >
+    UPDATE mp_module
+    <set >
+    	    	<if test="mid != null" >mid = #{mid},</if>
+		    	<if test="mname != null" >mname = #{mname},</if>
+		    </set>
+    WHERE 						 mid=#{mid} 
+										  </update>
+  
+  
+	
+	<!--mysql批量插入-->	
+		 <insert id="insertModels"  parameterType="java.util.List">  
+	     insert into mp_module
+	     <foreach collection="list" item="item" index="index" > 
+	     <if test="index ==0"> 
+	     <trim prefix="(" suffix=")" suffixOverrides="," >
+	     	     	     		 	     	         	 <if test="item.mname != null" >mname,</if>
+    	 		 	     </trim>
+	     </if>
+	     </foreach>
+	     values
+	     <foreach collection="list" item="item" index="index" separator="," >  
+	     <trim prefix="(" suffix=")" suffixOverrides="," >
+	      	      	      		  	      	          			<if test="item.mname != null" >#{item.mname},</if>
+    	  		  	     </trim>								    										
+	     </foreach>				
+	</insert>
+	
+	
+	<!---->
+	<update id="updateModels" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			UPDATE mp_module
+		    <set >
+		    			    	<if test="mid != null" >mid = #{mid},</if>
+						    	<if test="mname != null" >mname = #{mname},</if>
+						    </set>
+		    WHERE 												 mid=#{mid} 
+																						</foreach>
+	</update>
+	
+	
+</mapper>

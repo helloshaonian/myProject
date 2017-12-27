@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myProject.common.dao.UserRoleMapper">
+	
+	
+	<sql id="mapSQL" >
+						  uid as "uid" 
+						 ,   rid as "rid" 
+				  	</sql>
+  	
+	<sql id="objectSQL" >
+						  uid as "uid" 
+						 ,   rid as "rid" 
+				  	</sql>
+	
+	<select id="selectByPrimaryKey" resultType="com.myProject.common.model.UserRole" parameterType="java.lang.Long" >
+    	SELECT 
+    	<include refid="mapSQL" />
+    	FROM mp_user_role
+   		 WHERE 
+												  </select>
+  
+   <select id="selectModelByExample" resultType="com.myProject.common.model.UserRole" parameterType="com.myProject.common.model.UserRole" >
+    SELECT 
+    <include refid="objectSQL" />
+    FROM mp_user_role
+    <where>
+    	 <if test="uid!=null">AND  uid = #{uid}</if>
+		<if test="rid!=null">AND  rid = #{rid}</if>
+		    </where>
+  </select>
+  
+  <select id="selectByExample" resultType="java.util.HashMap" parameterType="com.myProject.common.model.UserRole" >
+    SELECT 
+    <include refid="mapSQL" />
+    FROM mp_user_role
+    <where>
+    	 <if test="uid!=null">AND  uid = #{uid}</if>
+		<if test="rid!=null">AND  rid = #{rid}</if>
+		    </where>
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    DELETE FROM mp_user_role
+    WHERE 										  </delete>
+  
+  <!--mysql主键自增-->	
+  <insert id="insert" parameterType="com.myProject.common.model.UserRole" useGeneratedKeys="true" keyProperty="">
+    INSERT INTO mp_user_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    	    	    	    	<if test="uid != null" >uid,</if>
+    			    	    	    	<if test="rid != null" >rid,</if>
+    			    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    	    	    	    	<if test="uid != null" >#{uid},</if>
+				    	    	    	<if test="rid != null" >#{rid},</if>
+				    </trim>
+  </insert>
+  
+   <update id="update" parameterType="com.myProject.common.model.UserRole" >
+    UPDATE mp_user_role
+    <set >
+    	    	<if test="uid != null" >uid = #{uid},</if>
+		    	<if test="rid != null" >rid = #{rid},</if>
+		    </set>
+    WHERE 										  </update>
+  
+  
+	
+	<!--mysql批量插入-->	
+		 <insert id="insertModels"  parameterType="java.util.List">  
+	     insert into mp_user_role
+	     <foreach collection="list" item="item" index="index" > 
+	     <if test="index ==0"> 
+	     <trim prefix="(" suffix=")" suffixOverrides="," >
+	     	     	         	 <if test="item.uid != null" >uid,</if>
+    	 		 	     	         	 <if test="item.rid != null" >rid,</if>
+    	 		 	     </trim>
+	     </if>
+	     </foreach>
+	     values
+	     <foreach collection="list" item="item" index="index" separator="," >  
+	     <trim prefix="(" suffix=")" suffixOverrides="," >
+	      	      	          			<if test="item.uid != null" >#{item.uid},</if>
+    	  		  	      	          			<if test="item.rid != null" >#{item.rid},</if>
+    	  		  	     </trim>								    										
+	     </foreach>				
+	</insert>
+	
+	
+	<!---->
+	<update id="updateModels" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			UPDATE mp_user_role
+		    <set >
+		    			    	<if test="uid != null" >uid = #{uid},</if>
+						    	<if test="rid != null" >rid = #{rid},</if>
+						    </set>
+		    WHERE 																						</foreach>
+	</update>
+	
+	
+</mapper>

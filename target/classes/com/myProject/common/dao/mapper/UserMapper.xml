@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myProject.common.dao.UserMapper">
+	
+	
+	<sql id="mapSQL" >
+						  uid as "uid" 
+						 ,   username as "username" 
+						 ,   password as "password" 
+				  	</sql>
+  	
+	<sql id="objectSQL" >
+						  uid as "uid" 
+						 ,   username as "username" 
+						 ,   password as "password" 
+				  	</sql>
+				  	
+	<resultMap type="com.myProject.common.model.User" id="userMap">
+        <id property="uid" column="uid"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <collection property="roles" ofType="com.myProject.common.model.Role">
+            <id property="rid" column="rid"/>
+            <result property="rname" column="rname"/>
+            <collection property="modules" ofType="com.myProject.common.model.Module">
+                <id property="mid" column="mid"/>
+                <result property="mname" column="mname"/>
+            </collection>
+        </collection>
+    </resultMap>
+    <select id="findByUserName" parameterType="string" resultMap="userMap">
+        SELECT u.*,r.*,m.* FROM mp_user u inner join mp_user_role ur on ur.uid=u.uid 
+        inner join mp_role r on r.rid=ur.rid
+        inner join mp_module_role mr on mr.rid=r.rid 
+        inner join mp_module m on mr.mid=m.mid 
+        WHERE username=#{username};
+    </select>			  	
+	
+	<select id="selectByPrimaryKey" resultType="com.myProject.common.model.User" parameterType="java.lang.Long" >
+    	SELECT 
+    	<include refid="mapSQL" />
+    	FROM mp_user
+   		 WHERE 
+								 uid=#{uid} 
+														  </select>
+  
+   <select id="selectModelByExample" resultType="com.myProject.common.model.User" parameterType="com.myProject.common.model.User" >
+    SELECT 
+    <include refid="objectSQL" />
+    FROM mp_user
+    <where>
+    	 <if test="uid!=null">AND  uid = #{uid}</if>
+		<if test="username!=null">AND  username = #{username}</if>
+		<if test="password!=null">AND  password = #{password}</if>
+		    </where>
+  </select>
+  
+  <select id="selectByExample" resultType="java.util.HashMap" parameterType="com.myProject.common.model.User" >
+    SELECT 
+    <include refid="mapSQL" />
+    FROM mp_user
+    <where>
+    	 <if test="uid!=null">AND  uid = #{uid}</if>
+		<if test="username!=null">AND  username = #{username}</if>
+		<if test="password!=null">AND  password = #{password}</if>
+		    </where>
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    DELETE FROM mp_user
+    WHERE 						 uid=#{uid} 
+														  </delete>
+  
+  <!--mysql主键自增-->	
+  <insert id="insert" parameterType="com.myProject.common.model.User" useGeneratedKeys="true" keyProperty="uid">
+    INSERT INTO mp_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+    	    	    			    	    	    	<if test="username != null" >username,</if>
+    			    	    	    	<if test="password != null" >password,</if>
+    			    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+    	    	    			    	    	    	<if test="username != null" >#{username},</if>
+				    	    	    	<if test="password != null" >#{password},</if>
+				    </trim>
+  </insert>
+  
+   <update id="update" parameterType="com.myProject.common.model.User" >
+    UPDATE mp_user
+    <set >
+    	    	<if test="uid != null" >uid = #{uid},</if>
+		    	<if test="username != null" >username = #{username},</if>
+		    	<if test="password != null" >password = #{password},</if>
+		    </set>
+    WHERE 						 uid=#{uid} 
+														  </update>
+  
+  
+	
+	<!--mysql批量插入-->	
+		 <insert id="insertModels"  parameterType="java.util.List">  
+	     insert into mp_user
+	     <foreach collection="list" item="item" index="index" > 
+	     <if test="index ==0"> 
+	     <trim prefix="(" suffix=")" suffixOverrides="," >
+	     	     	     		 	     	         	 <if test="item.username != null" >username,</if>
+    	 		 	     	         	 <if test="item.password != null" >password,</if>
+    	 		 	     </trim>
+	     </if>
+	     </foreach>
+	     values
+	     <foreach collection="list" item="item" index="index" separator="," >  
+	     <trim prefix="(" suffix=")" suffixOverrides="," >
+	      	      	      		  	      	          			<if test="item.username != null" >#{item.username},</if>
+    	  		  	      	          			<if test="item.password != null" >#{item.password},</if>
+    	  		  	     </trim>								    										
+	     </foreach>				
+	</insert>
+	
+	
+	<!---->
+	<update id="updateModels" parameterType="java.util.List">
+		<foreach collection="list" item="item" index="index" open="begin"
+			close=";end;" separator=";">
+			UPDATE mp_user
+		    <set >
+		    			    	<if test="uid != null" >uid = #{uid},</if>
+						    	<if test="username != null" >username = #{username},</if>
+						    	<if test="password != null" >password = #{password},</if>
+						    </set>
+		    WHERE 												 uid=#{uid} 
+																														</foreach>
+	</update>
+	
+	
+</mapper>
