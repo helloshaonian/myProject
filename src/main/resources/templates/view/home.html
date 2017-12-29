@@ -17,5 +17,74 @@ xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <span  shiro:hasAnyPermissions="update,add,query,delete">任意一个权限</span>
 </h1>
 <h1><a href="a.html" th:href="@{/v1/schoole/add/(user=${session.username}) }">schoole</a></h1>
+
+<button id="clear">清除缓存</button><br/>
+	<a href="/v1/logOut ">注销</a>
+   <div id="main" style="width: 1000px;height:600px;"></div> 
 </body>
+
+<script type="text/javascript" th:src="@{~/js/jquery-1.7.2.min.js}"></script>
+<!-- <script type="text/javascript" th:src="@{js/echarts.js}"></script>
+<script type="text/javascript" th:src="@{js/echarts-gl.js}"></script> -->
+
+<script type="text/javascript">
+function mPAjax(type,url,success){
+	$.ajax({
+		type:type,
+		url:url,
+		success:function(res){
+			if(res.LOGIN_STATUS=="401"){
+				console.log("ajax跳转登录页");
+				location.href=ctx+"/v1/login";
+			}else{
+				success(res);
+			}			
+		}
+	});
+}
+</script>
+<script type="text/javascript">
+/* $("#clear").click(function(){
+	mPAjax("GET",ctx+"/v1/schoole/clearCache",function(res){
+		alert(res.statu);
+	});
+});
+var myChart = echarts.init(document.getElementById('main'));
+// 指定图表的配置项和数据
+var option = {
+    backgroundColor: '#000',
+    globe: {
+        baseTexture: '/asset/get/s/data-1491890179041-Hkj-elqpe.jpg',
+        heightTexture: '/asset/get/s/data-1491889019097-rJQYikcpl.jpg',
+
+        displacementScale: 0.1,
+
+        shading: 'lambert',
+        
+        environment: '/asset/get/s/data-1491837999815-H1_44Qtal.jpg',
+        
+        light: {
+            ambient: {
+                intensity: 0.1
+            },
+            main: {
+                intensity: 1.5
+            }
+        },
+
+        layers: [{
+            type: 'blend',
+            blendTo: 'emission',
+            texture: '/asset/get/s/data-1491890291849-rJ2uee5ag.jpg'
+        }, {
+            type: 'overlay',
+            texture: '/asset/get/s/data-1491890092270-BJEhJg96l.png',
+            shading: 'lambert',
+            distance: 5
+        }]
+    },
+    series: []
+} */
+myChart.setOption(option);
+</script> 
 </html>

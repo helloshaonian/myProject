@@ -30,12 +30,7 @@ public class SchooleController {
 	@Autowired
 	private SchooleService schooleService;
 	
-	@Value("${sitemesh.contentPath}")
-	private String contentPath;
-
-	/** 装饰器页面路径 */
-	@Value("${sitemesh.decoratorPath}")
-	private String decoratorPath;
+	
 	
 	
 	
